@@ -13,7 +13,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 class InputDownloaderTest {
 
     @Test
-    void testDownloadingInput() throws IOException {
+    void testDownloadingInput() throws IOException, InterruptedException {
         InputDownloader downloader = new InputDownloader();
         try (BufferedReader reader = downloader.download(2024, 1)) {
             assertThat(reader.lines().toList()).isNotEmpty();
