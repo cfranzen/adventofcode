@@ -44,4 +44,18 @@ class ReportTest {
         assertThat(Report.of(8, 6, 4, 4, 1).isSafe()).isFalse();
     }
 
+    @Test
+    void testRelaxedSafe() {
+        assertThat(Report.of(7, 6, 4, 2, 1).isRelaxedSafe()).isTrue();
+        assertThat(Report.of(1, 3, 2, 4, 5).isRelaxedSafe()).isTrue();
+        assertThat(Report.of(8, 6, 4, 4, 1).isRelaxedSafe()).isTrue();
+        assertThat(Report.of(1, 3, 6, 7, 9).isRelaxedSafe()).isTrue();
+        assertThat(Report.of(1, 1, 3, 4, 5).isRelaxedSafe()).isTrue();
+    }
+
+    @Test
+    void testRelaxedUnsafe() {
+        assertThat(Report.of(1, 2, 7, 8, 9).isRelaxedSafe()).isFalse();
+        assertThat(Report.of(9, 7, 6, 2, 1).isRelaxedSafe()).isFalse();
+    }
 }

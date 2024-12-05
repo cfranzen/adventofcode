@@ -11,10 +11,16 @@ public class ReportEvaluationApp {
         final var reports = new InputParser().parseInput(lines);
 
         calculationPart1(reports);
+        calculationPart2(reports);
     }
 
     private static void calculationPart1(final List<Report> reports) {
         long safeReportsCount = reports.stream().filter(Report::isSafe).count();
         System.out.println("Overall safe reports: " + safeReportsCount);
+    }
+
+    private static void calculationPart2(final List<Report> reports) {
+        long safeReportsCount = reports.stream().filter(Report::isRelaxedSafe).count();
+        System.out.println("Overall relaxed safe reports: " + safeReportsCount);
     }
 }

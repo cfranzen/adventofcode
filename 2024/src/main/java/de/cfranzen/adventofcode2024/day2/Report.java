@@ -4,10 +4,7 @@ import lombok.AccessLevel;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
 
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
 @Data
@@ -28,22 +25,46 @@ public class Report {
     }
 
     public boolean isSafe() {
-        if (levels.size() <= 1) {
+        return isIteratorSafe(levels.listIterator());
+    }
+
+    public boolean isRelaxedSafe() {
+        if (isIteratorSafe(levels.listIterator())) {
             return true;
         }
 
-        // Check for steady increase or decrease
-        final int expectedComparison = levels.get(0).compareTo(levels.get(1));
-        for (int i = 1; i < levels.size() - 1; i++) {
-            final int comparison = levels.get(i).compareTo(levels.get(i + 1));
-            if (expectedComparison != comparison) {
-                return false;
+        for (int blockedIndex = 0; blockedIndex < levels.size(); blockedIndex++) {
+            if (isIteratorSafe(new FilteringListIterator<>(levels, blockedIndex))) {
+                return true;
             }
         }
+        return false;
+    }
 
-        // Check for distance range
-        for (int i = 0; i < levels.size() - 1; i++) {
-            final int distance = levels.get(i).distanceTo(levels.get(i + 1));
+    private static boolean isIteratorSafe(final ListIterator<Level> levelIterator) {
+        int expectedComparison = 0;
+        while (levelIterator.hasNext()) {
+            final var firstLevel = levelIterator.next();
+
+            if (!levelIterator.hasNext()) {
+                break;
+            }
+            final var secondLevel = levelIterator.next();
+            levelIterator.previous();
+
+            // Check for steady increase or decrease
+            final int comparison = firstLevel.compareTo(secondLevel);
+            if (comparison == 0) {
+                return false;
+            }
+            if (expectedComparison == 0) {
+                expectedComparison = comparison;
+            } else if (expectedComparison != comparison) {
+                return false;
+            }
+
+            // Check for distance range
+            final int distance = firstLevel.distanceTo(secondLevel);
             if (distance < 1 || distance > 3) {
                 return false;
             }
@@ -51,4 +72,5 @@ public class Report {
 
         return true;
     }
+
 }
