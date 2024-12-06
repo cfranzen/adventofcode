@@ -13,7 +13,7 @@ public class MultiplyInstruction implements Instruction {
     private final int second;
 
     @Override
-    public long calculate() {
-        return (long) first * second;
+    public void calculate(final InstructionsResult result) {
+        result.add((long) first * second);
     }
 }

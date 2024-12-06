@@ -23,7 +23,11 @@ public class MemorySection {
         return new MemorySection(new ArrayList<>(instructions));
     }
 
-    public long instructionsSum() {
-        return instructions.stream().mapToLong(Instruction::calculate).sum();
+    public void instructionsSum(final InstructionsResult result) {
+        instructions.forEach(i -> i.calculate(result));
+    }
+
+    public void alwaysActiveInstructionsSum(final InstructionsResult result) {
+        instructions.stream().filter(MultiplyInstruction.class::isInstance).forEach(i -> i.calculate(result));
     }
 }
